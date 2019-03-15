@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Lab.Entities;
 
 namespace Lab
@@ -111,7 +112,7 @@ namespace Lab
             return true;
         }
 
-        public static bool JoeyAny(this IEnumerable<Product> products, Func<Product, bool> predicate)
+        public static bool JoeyAny<TSource>(this IEnumerable<TSource> products, Func<TSource, bool> predicate)
         {
             var enumerator = products.GetEnumerator();
             
@@ -126,6 +127,11 @@ namespace Lab
             }
 
             return false;
+        }
+
+        public static bool IsEmpty<TSource>(this IEnumerable<TSource> sources)
+        {
+            return !sources.Any();
         }
     }
 }

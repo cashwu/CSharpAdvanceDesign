@@ -1,6 +1,8 @@
-﻿using Lab.Entities;
+﻿using System;
+using Lab.Entities;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 using Lab;
 
 namespace CSharpAdvanceDesignTests
@@ -47,8 +49,20 @@ namespace CSharpAdvanceDesignTests
                 new Product { Id = 7, Cost = 71, Price = 710, Supplier = "Yahoo" },
                 new Product { Id = 8, Cost = 18, Price = 780, Supplier = "Yahoo" },
             };
-            
+
             Assert.True(products.JoeyAny(product => product.Price > 500));
+        }
+
+        [Test]
+        public void IsEmpty()
+        {
+            var names = new string[] { };
+            var ids = new[] { 1, 2 };
+
+            if (names.IsEmpty() && ids.IsEmpty())
+            {
+                Console.WriteLine();
+            }
         }
     }
 }
