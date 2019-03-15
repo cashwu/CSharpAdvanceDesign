@@ -22,28 +22,37 @@ namespace CSharpAdvanceDesignTests
                 new Product { Id = 5, Cost = 51, Price = 510, Supplier = "Momo" },
                 new Product { Id = 6, Cost = 61, Price = 610, Supplier = "Momo" },
                 new Product { Id = 7, Cost = 71, Price = 710, Supplier = "Yahoo" },
-                new Product { Id = 8, Cost = 18, Price = 780, Supplier = "Yahoo" }
+                new Product { Id = 8, Cost = 18, Price = 780, Supplier = "Yahoo" },
+                new Product { Id = 8, Cost = 1, Price = 780, Supplier = "Yahoo" }
             };
 
             var expected = new[]
             {
-                63, 153, 89
+                63, 153, 90
             };
 
             var actual = JoeyGroupSum(products);
-            
+
             expected.ToExpectedObject().ShouldMatch(actual);
         }
 
-        private IEnumerable<int> JoeyGroupSum(List<Product> products)
+        private IEnumerable<int> JoeyGroupSum(IEnumerable<Product> products)
         {
             // var groupCount = products.Count / 3;
 
-            for (var i = 0; i <= products.Count; i += 3)
+            // for (var i = 0; i <= products.Count(); i += 3)
+            // {
+            //     yield return products.Skip(i).Take(3).Sum(a => a.Cost);
+            // }
+
+            var pageSize = 3;
+            var pageIndex = 0;
+            while (products.Count() > pageSize * pageIndex)
             {
-                yield return products.Skip(i).Take(3).Sum(a => a.Cost);
+                yield return products.Skip(pageSize * pageIndex).Take(pageSize).Sum(a => a.Cost);
+                pageIndex++;
             }
-            
+
             // yield return products.Skip(0).Take(3).Sum(a => a.Cost);
             // yield return products.Skip(1 * 3).Take(3).Sum(a => a.Cost);
             // yield return products.Skip(2 * 3).Take(3).Sum(a => a.Cost);
