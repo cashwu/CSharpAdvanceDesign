@@ -46,5 +46,16 @@ namespace CSharpAdvanceDesignTests
 
             expected.ToExpectedObject().ShouldMatch(actual);
         }
+
+        [Test]
+        public void find_odd_name()
+        {
+            var str = new List<string> { "aa", "bbb", "cccc" };
+
+            var actual = str.JoeyWhere((s, i) => i % 2 == 0);
+            var expected = new[] { "aa", "cccc" };
+
+            expected.ToExpectedObject().ShouldMatch(actual);
+        }
     }
 }
