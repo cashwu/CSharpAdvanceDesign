@@ -2,9 +2,9 @@
 using ExpectedObjects;
 using Lab.Entities;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using System.Collections.Generic;
 using System.Linq;
+using Lab;
 
 namespace CSharpAdvanceDesignTests
 {
@@ -16,7 +16,7 @@ namespace CSharpAdvanceDesignTests
         {
             var urls = GetUrls();
 
-            var actual = JoeySelect(urls, url => url.Replace("http://", "https://"));
+            var actual = urls.JoeySelect(url => url.Replace("http://", "https://"));
             var expected = new List<string>
             {
                 "https://tw.yahoo.com",
@@ -33,7 +33,7 @@ namespace CSharpAdvanceDesignTests
         {
             var urls = GetUrls();
 
-            var actual = JoeySelect(urls, url => url.Replace("http://", "https://") + "/joey");
+            var actual = urls.JoeySelect(url => url.Replace("http://", "https://") + "/joey");
             var expected = new List<string>
             {
                 "https://tw.yahoo.com/joey",
@@ -50,7 +50,7 @@ namespace CSharpAdvanceDesignTests
         {
             var employees = GetEmployees();
 
-            var actual = JoeySelect(employees, employee => $"{employee.FirstName}-{employee.LastName}");
+            var actual = employees.JoeySelect(employee => $"{employee.FirstName}-{employee.LastName}");
             var expected = new List<string>
             {
                 "Joey-Chen",
@@ -66,7 +66,7 @@ namespace CSharpAdvanceDesignTests
         {
             var employees = GetEmployees();
 
-            var actual = JoeySelect(employees, employee => $"{employee.FirstName}{employee.LastName}".Length);
+            var actual = employees.JoeySelect(employee => $"{employee.FirstName}{employee.LastName}".Length);
             var expected = new List<int>
             {
                 8,
@@ -82,7 +82,7 @@ namespace CSharpAdvanceDesignTests
         {
             var employees = GetEmployees();
 
-            var actual = JoeySelect(employees, (employee, index) => $"{index + 1}.{employee.FirstName}-{employee.LastName}");
+            var actual = employees.JoeySelect((employee, index) => $"{index + 1}.{employee.FirstName}-{employee.LastName}");
             var expected = new List<string>
             {
                 "1.Joey-Chen",
@@ -91,25 +91,6 @@ namespace CSharpAdvanceDesignTests
             };
 
             expected.ToExpectedObject().ShouldEqual(actual.ToList());
-        }
-
-        private IEnumerable<TResult> JoeySelect<TSource, TResult>(IEnumerable<TSource> sources, Func<TSource, TResult> selector)
-        {
-            foreach (var source in sources)
-            {
-                yield return selector(source);
-            }
-        }
-
-        private IEnumerable<TResult> JoeySelect<TSource, TResult>(IEnumerable<TSource> sources, Func<TSource, int, TResult> selector)
-        {
-            var index = 0;
-            foreach (var source in sources)
-            {
-                yield return selector(source, index);
-
-                index++;
-            }
         }
 
         private static IEnumerable<string> GetUrls()
