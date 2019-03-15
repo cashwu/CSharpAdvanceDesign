@@ -45,11 +45,27 @@ namespace CSharpAdvanceDesignTests
             expected.ToExpectedObject().ShouldEqual(actual.ToList());
         }
 
-        private IEnumerable<string> JoeySelect(IEnumerable<string> urls, Func<string, string> selector)
+        [Test]
+        public void get_full_name()
         {
-            foreach (var url in urls)
+            var employees = GetEmployees();
+
+            var actual = JoeySelect(employees, employee => $"{employee.FirstName}-{employee.LastName}");
+            var expected = new List<string>
             {
-                yield return selector(url);
+                "Joey-Chen",
+                "Tom-Li",
+                "David-Chen"
+            };
+
+            expected.ToExpectedObject().ShouldEqual(actual.ToList());
+        }
+
+        private IEnumerable<string> JoeySelect<TSource>(IEnumerable<TSource> sources, Func<TSource, string> selector)
+        {
+            foreach (var source in sources)
+            {
+                yield return selector(source);
             }
         }
 
