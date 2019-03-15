@@ -1,10 +1,10 @@
 ﻿using Lab.Entities;
 using NUnit.Framework;
 using System.Collections.Generic;
+using Lab;
 
 namespace CSharpAdvanceDesignTests
 {
-    [Ignore("not yet")]
     [TestFixture]
     public class JoeyAllTests
     {
@@ -13,20 +13,16 @@ namespace CSharpAdvanceDesignTests
         {
             var girls = new List<Girl>
             {
-                new Girl{Age = 20},
-                new Girl{Age = 21},
-                new Girl{Age = 17},
-                new Girl{Age = 18},
-                new Girl{Age = 30},
+                new Girl { Age = 20 },
+                new Girl { Age = 21 },
+                new Girl { Age = 17 },
+                new Girl { Age = 18 },
+                new Girl { Age = 30 }
             };
 
-            var actual = JoeyAll(girls);
-            Assert.IsFalse(actual);
-        }
+            var actual = girls.JoeyAll(girl => girl.Age >= 18);
 
-        private bool JoeyAll(IEnumerable<Girl> girls)
-        {
-            throw new System.NotImplementedException();
+            Assert.IsFalse(actual);
         }
     }
 }
