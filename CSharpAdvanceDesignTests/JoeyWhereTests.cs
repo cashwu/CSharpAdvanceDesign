@@ -1,4 +1,5 @@
-﻿using Lab.Entities;
+﻿using System;
+using Lab.Entities;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,12 +32,37 @@ namespace CSharpAdvanceDesignTests
                 63, 153, 90
             };
 
-            var actual = JoeyGroupSum(products);
+            var actual = JoeyGroupSum(products, 3, a => a.Cost);
 
             expected.ToExpectedObject().ShouldMatch(actual);
         }
 
-        private IEnumerable<int> JoeyGroupSum(IEnumerable<Product> products)
+        [Test]
+        public void group_sum_group_count_is_5_sum_id()
+        {
+            var products = new List<Product>
+            {
+                new Product { Id = 1, Cost = 11, Price = 110, Supplier = "Odd-e" },
+                new Product { Id = 2, Cost = 21, Price = 210, Supplier = "Yahoo" },
+                new Product { Id = 3, Cost = 31, Price = 310, Supplier = "Odd-e" },
+                new Product { Id = 4, Cost = 41, Price = 410, Supplier = "Odd-e" },
+                new Product { Id = 5, Cost = 51, Price = 510, Supplier = "Momo" },
+                new Product { Id = 6, Cost = 61, Price = 610, Supplier = "Momo" },
+                new Product { Id = 7, Cost = 71, Price = 710, Supplier = "Yahoo" },
+                new Product { Id = 8, Cost = 18, Price = 780, Supplier = "Yahoo" },
+            };
+
+            var expected = new[]
+            {
+                15, 21
+            };
+
+            var actual = JoeyGroupSum(products, 5, a => a.Id);
+
+            expected.ToExpectedObject().ShouldMatch(actual);
+        }
+
+        private IEnumerable<int> JoeyGroupSum<TSource>(IEnumerable<TSource> products, int groupSize, Func<TSource, int> selector)
         {
             // var groupCount = products.Count / 3;
 
@@ -45,11 +71,12 @@ namespace CSharpAdvanceDesignTests
             //     yield return products.Skip(i).Take(3).Sum(a => a.Cost);
             // }
 
-            var pageSize = 3;
+            var pageSize = groupSize;
             var pageIndex = 0;
-            while (products.Count() > pageSize * pageIndex)
+            var count = products.Count();
+            while (count > pageSize * pageIndex)
             {
-                yield return products.Skip(pageSize * pageIndex).Take(pageSize).Sum(a => a.Cost);
+                yield return products.Skip(pageSize * pageIndex).Take(pageSize).Sum(selector);
                 pageIndex++;
             }
 
