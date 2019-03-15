@@ -1,8 +1,8 @@
-﻿using System;
-using Lab.Entities;
+﻿using Lab.Entities;
 using NUnit.Framework;
 using System.Collections.Generic;
 using ExpectedObjects;
+using Lab;
 
 namespace CSharpAdvanceDesignTests
 {
@@ -24,7 +24,7 @@ namespace CSharpAdvanceDesignTests
                 new Product { Id = 8, Cost = 18, Price = 780, Supplier = "Yahoo" }
             };
 
-            var actual = JoeyWhere(products, product => product.Price > 200 && product.Price < 500);
+            var actual = products.JoeyWhere(product => product.Price > 200 && product.Price < 500);
 
             var expected = new List<Product>
             {
@@ -41,21 +41,10 @@ namespace CSharpAdvanceDesignTests
         {
             var str = new List<string> { "aa", "bbb", "cccc" };
 
-            var actual = JoeyWhere(str, s => s.Length > 3);
+            var actual = str.JoeyWhere(s => s.Length > 3);
             var expected = new[] { "cccc" };
 
             expected.ToExpectedObject().ShouldMatch(actual);
-        }
-
-        private IEnumerable<TCash> JoeyWhere<TCash>(List<TCash> sources, Func<TCash, bool> predicate)
-        {
-            foreach (var source in sources)
-            {
-                if (predicate(source))
-                {
-                    yield return source;
-                }
-            }
         }
     }
 }
