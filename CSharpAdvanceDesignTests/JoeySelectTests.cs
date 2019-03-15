@@ -1,4 +1,5 @@
-﻿using ExpectedObjects;
+﻿using System;
+using ExpectedObjects;
 using Lab.Entities;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
@@ -8,7 +9,6 @@ using System.Linq;
 namespace CSharpAdvanceDesignTests
 {
     [TestFixture()]
-    [Ignore("not yet")]
     public class JoeySelectTests
     {
         [Test]
@@ -16,7 +16,7 @@ namespace CSharpAdvanceDesignTests
         {
             var urls = GetUrls();
 
-            var actual = JoeySelect(urls);
+            var actual = JoeySelect(urls, url => url.Replace("http://", "https://"));
             var expected = new List<string>
             {
                 "https://tw.yahoo.com",
@@ -28,9 +28,29 @@ namespace CSharpAdvanceDesignTests
             expected.ToExpectedObject().ShouldEqual(actual.ToList());
         }
 
-        private IEnumerable<string> JoeySelect(IEnumerable<string> urls)
+        [Test]
+        public void replace_http_to_https_and_append_joey()
         {
-            throw new System.NotImplementedException();
+            var urls = GetUrls();
+
+            var actual = JoeySelect(urls, url => url.Replace("http://", "https://") + "/joey");
+            var expected = new List<string>
+            {
+                "https://tw.yahoo.com/joey",
+                "https://facebook.com/joey",
+                "https://twitter.com/joey",
+                "https://github.com/joey"
+            };
+
+            expected.ToExpectedObject().ShouldEqual(actual.ToList());
+        }
+
+        private IEnumerable<string> JoeySelect(IEnumerable<string> urls, Func<string, string> selector)
+        {
+            foreach (var url in urls)
+            {
+                yield return selector(url);
+            }
         }
 
         private static IEnumerable<string> GetUrls()
@@ -45,9 +65,9 @@ namespace CSharpAdvanceDesignTests
         {
             return new List<Employee>
             {
-                new Employee {FirstName = "Joey", LastName = "Chen"},
-                new Employee {FirstName = "Tom", LastName = "Li"},
-                new Employee {FirstName = "David", LastName = "Chen"}
+                new Employee { FirstName = "Joey", LastName = "Chen" },
+                new Employee { FirstName = "Tom", LastName = "Li" },
+                new Employee { FirstName = "David", LastName = "Chen" }
             };
         }
     }
