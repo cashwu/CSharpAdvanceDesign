@@ -7,13 +7,25 @@ namespace Lab
     {
         public static IEnumerable<TSource> JoeyWhere<TSource>(this List<TSource> sources, Predicate<TSource> predicate)
         {
-            foreach (var source in sources)
+            var enumerator = sources.GetEnumerator();
+
+            while (enumerator.MoveNext())
             {
-                if (predicate(source))
+                var item = enumerator.Current;
+
+                if (predicate(item))
                 {
-                    yield return source;
+                    yield return item;
                 }
             }
+            
+            // foreach (var source in sources)
+            // {
+            //     if (predicate(source))
+            //     {
+            //         yield return source;
+            //     }
+            // }
         }
 
         public static IEnumerable<TSource> JoeyWhere<TSource>(this List<TSource> sources, Func<TSource, int, bool> predicate)
