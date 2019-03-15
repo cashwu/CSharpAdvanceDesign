@@ -110,5 +110,22 @@ namespace Lab
 
             return true;
         }
+
+        public static bool JoeyAny(this IEnumerable<Product> products, Func<Product, bool> predicate)
+        {
+            var enumerator = products.GetEnumerator();
+            
+            while (enumerator.MoveNext())
+            {
+                var product = enumerator.Current;
+
+                if (predicate(product))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }
