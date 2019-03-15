@@ -61,7 +61,23 @@ namespace CSharpAdvanceDesignTests
             expected.ToExpectedObject().ShouldEqual(actual.ToList());
         }
 
-        private IEnumerable<string> JoeySelect<TSource>(IEnumerable<TSource> sources, Func<TSource, string> selector)
+        [Test]
+        public void get_full_name_length()
+        {
+            var employees = GetEmployees();
+
+            var actual = JoeySelect(employees, employee => $"{employee.FirstName}{employee.LastName}".Length);
+            var expected = new List<int>
+            {
+                8,
+                5,
+                9
+            };
+
+            expected.ToExpectedObject().ShouldEqual(actual.ToList());
+        }
+
+        private IEnumerable<TResult> JoeySelect<TSource, TResult>(IEnumerable<TSource> sources, Func<TSource, TResult> selector)
         {
             foreach (var source in sources)
             {
