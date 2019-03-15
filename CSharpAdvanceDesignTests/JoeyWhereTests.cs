@@ -36,13 +36,24 @@ namespace CSharpAdvanceDesignTests
             expected.ToExpectedObject().ShouldMatch(actual);
         }
 
-        private IEnumerable<Product> JoeyWhere(List<Product> products, Func<Product, bool> predicate)
+        [Test]
+        public void find_name_short()
         {
-            foreach (var product in products)
+            var str = new List<string> { "aa", "bbb", "cccc" };
+
+            var actual = JoeyWhere(str, s => s.Length > 3);
+            var expected = new[] { "cccc" };
+
+            expected.ToExpectedObject().ShouldMatch(actual);
+        }
+
+        private IEnumerable<TCash> JoeyWhere<TCash>(List<TCash> sources, Func<TCash, bool> predicate)
+        {
+            foreach (var source in sources)
             {
-                if (predicate(product))
+                if (predicate(source))
                 {
-                    yield return product;
+                    yield return source;
                 }
             }
         }
