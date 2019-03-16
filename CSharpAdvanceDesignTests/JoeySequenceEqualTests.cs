@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using System.Collections.Generic;
 using Lab.Entities;
 
@@ -83,6 +84,22 @@ namespace CSharpAdvanceDesignTests
             Assert.IsTrue(actual);
         }
 
+        [Test]
+        [Ignore("duplicate key")]
+        public void dictionary_get_hash_code()
+        {
+            var a = new Employee() { FirstName = "Joey", LastName = "Chen", Phone = "123" };
+            var b = new Employee() { FirstName = "Joey", LastName = "Chen", Phone = "456" };
+            var c = new Employee() { FirstName = "David", LastName = "Wang", Phone = "123" };
+
+            var dictionary = new Dictionary<Employee, int>(new JoeyEmployeeEqualityComparer());
+            dictionary.Add(a, 1);
+            dictionary.Add(b, 2);
+            dictionary.Add(c, 3);
+
+            Console.WriteLine(dictionary.Count);
+        }
+
         private bool JoeySequenceEqual<TSource>(IEnumerable<TSource> first, IEnumerable<TSource> second, IEqualityComparer<TSource> equalityComparer)
         {
             var firstEnumerator = first.GetEnumerator();
@@ -97,7 +114,7 @@ namespace CSharpAdvanceDesignTests
                 {
                     return false;
                 }
-                
+
                 if (IsEnd(firstFlag))
                 {
                     return true;

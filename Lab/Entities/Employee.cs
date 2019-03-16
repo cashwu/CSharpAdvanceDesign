@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Lab.Entities
 {
@@ -12,7 +13,11 @@ namespace Lab.Entities
 
         public int GetHashCode(Employee obj)
         {
-            throw new System.NotImplementedException();
+            var firstNameCode = obj.FirstName;
+            var LastNameCode = obj.LastName;
+
+            return Tuple.Create(firstNameCode, LastNameCode).GetHashCode();
+            // return new { firstNameCode, LastNameCode }.GetHashCode();
         }
     }
 
