@@ -169,5 +169,15 @@ namespace Lab
                 yield return selector(firstEnumerator.Current, secondEnumerator.Current);
             }
         }
+
+        public static IOrderedEnumerable<Employee> JoeyOrderBy(this IEnumerable<Employee> sources, Func<Employee, string> keySelector, IComparer<string> comparer)
+        {
+            return new MyOrderEnumerable(sources, new CombineKeyComparer<string>(keySelector, comparer));
+        }
+
+        public static IOrderedEnumerable<Employee> JoeyThenBy<TKey>(this IOrderedEnumerable<Employee> source, Func<Employee, TKey> keySelector, Comparer<TKey> comparer)
+        {
+            return source.CreateOrderedEnumerable(keySelector, comparer, false);
+        }
     }
 }
