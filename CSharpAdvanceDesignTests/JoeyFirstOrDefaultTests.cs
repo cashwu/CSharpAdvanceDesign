@@ -6,8 +6,7 @@ using System.Collections.Generic;
 
 namespace CSharpAdvanceDesignTests
 {
-    [TestFixture()]
-    [Ignore("not yet")]
+    [TestFixture]
     public class JoeyFirstOrDefaultTests
     {
         [Test]
@@ -20,9 +19,26 @@ namespace CSharpAdvanceDesignTests
             Assert.IsNull(actual);
         }
 
-        private Employee JoeyFirstOrDefault(IEnumerable<Employee> employees)
+        [Test]
+        public void numbers_is_empty()
         {
-            throw new NotImplementedException();
+            var items = new List<int>();
+
+            var actual = JoeyFirstOrDefault(items);
+
+            Assert.AreEqual(0, actual);
+        }
+
+        private TSource JoeyFirstOrDefault<TSource>(IEnumerable<TSource> employees)
+        {
+            var enumerator = employees.GetEnumerator();
+
+            if (enumerator.MoveNext())
+            {
+                return enumerator.Current;
+            }
+
+            return default(TSource);
         }
     }
 }
