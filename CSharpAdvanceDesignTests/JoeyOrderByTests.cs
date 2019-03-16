@@ -12,6 +12,7 @@ namespace CSharpAdvanceDesignTests
     public class JoeyOrderByTests
     {
         [Test]
+        [Ignore("ignore")]
         public void orderBy_lastName()
         {
             var employees = new[]
@@ -35,6 +36,30 @@ namespace CSharpAdvanceDesignTests
             expected.ToExpectedObject().ShouldMatch(actual);
         }
 
+        [Test]
+        public void orderBy_lastName_and_firstName()
+        {
+            var employees = new[]
+            {
+                new Employee { FirstName = "Joey", LastName = "Wang" },
+                new Employee { FirstName = "Tom", LastName = "Li" },
+                new Employee { FirstName = "Joseph", LastName = "Chen" },
+                new Employee { FirstName = "Joey", LastName = "Chen" }
+            };
+
+            var actual = JoeyOrderByLastName(employees);
+
+            var expected = new[]
+            {
+                new Employee { FirstName = "Joey", LastName = "Chen" },
+                new Employee { FirstName = "Joseph", LastName = "Chen" },
+                new Employee { FirstName = "Tom", LastName = "Li" },
+                new Employee { FirstName = "Joey", LastName = "Wang" }
+            };
+
+            expected.ToExpectedObject().ShouldMatch(actual);
+        }
+
         private IEnumerable<Employee> JoeyOrderByLastName(IEnumerable<Employee> employees)
         {
             //bubble sort
@@ -46,10 +71,19 @@ namespace CSharpAdvanceDesignTests
                 var index = 0;
                 for (int i = 1; i < elements.Count; i++)
                 {
-                    if (stringComparer.Compare(elements[i].LastName, minElement.LastName) < 0)
+                    var firstCompareResult = stringComparer.Compare(elements[i].LastName, minElement.LastName);
+                    if (firstCompareResult < 0)
                     {
                         minElement = elements[i];
                         index = i;
+                    }
+                    else if (firstCompareResult == 0)
+                    {
+                        if (stringComparer.Compare(elements[i].FirstName, minElement.FirstName) < 0)
+                        {
+                            minElement = elements[i];
+                            index = i;
+                        }
                     }
                 }
 
