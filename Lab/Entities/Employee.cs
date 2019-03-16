@@ -44,6 +44,8 @@ namespace Lab.Entities
 
         public string Phone { get; set; }
 
+        public int Age { get; set; }
+
         public override bool Equals(object obj)
         {
             if (obj is Employee e)
