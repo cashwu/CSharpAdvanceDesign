@@ -68,18 +68,57 @@ namespace CSharpAdvanceDesignTests
             var firstEnumerator = first.GetEnumerator();
             var secondEnumerator = second.GetEnumerator();
 
-            while (firstEnumerator.MoveNext() & secondEnumerator.MoveNext())
+            while (true)
             {
-                var firstItem = firstEnumerator.Current;
-                var secondItem = secondEnumerator.Current;
+                var firstFlag = firstEnumerator.MoveNext();
+                var secondFlag = secondEnumerator.MoveNext();
 
-                if (firstItem != secondItem)
+                if (IsLengthDifferent(firstFlag, secondFlag))
                 {
                     return false;
                 }
+
+                if (IsValueDifferent(firstEnumerator, secondEnumerator))
+                {
+                    return false;
+                }
+
+                if (IsEnd(firstFlag))
+                {
+                    return true;
+                }
             }
 
-            return firstEnumerator.Current == secondEnumerator.Current;
+            
+            // var isFirstMoveNext = true;
+            // var isSecondMoveNext = true;
+            // while ((isFirstMoveNext = firstEnumerator.MoveNext()) & (isSecondMoveNext = secondEnumerator.MoveNext()))
+            // {
+            //     var firstItem = firstEnumerator.Current;
+            //     var secondItem = secondEnumerator.Current;
+            //
+            //     if (firstItem != secondItem)
+            //     {
+            //         return false;
+            //     }
+            // }
+            //
+            // return isFirstMoveNext == isSecondMoveNext;
         }
+        
+        private static bool IsEnd(bool firstFlag)
+        {
+            return !firstFlag;
+        }
+
+        private static bool IsValueDifferent(IEnumerator<int> firstEnumerator, IEnumerator<int> secondEnumerator)
+        {
+            return firstEnumerator.Current != secondEnumerator.Current;
+        }
+
+        private static bool IsLengthDifferent(bool firstFlag, bool secondFlag)
+        {
+            return firstFlag != secondFlag;
+        }	        
     }
 }
