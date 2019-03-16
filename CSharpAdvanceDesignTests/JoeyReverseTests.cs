@@ -6,7 +6,6 @@ using System.Collections.Generic;
 namespace CSharpAdvanceDesignTests
 {
     [TestFixture]
-    [Ignore("not yet")]
     public class JoeyReverseTests
     {
         [Test]
@@ -31,9 +30,22 @@ namespace CSharpAdvanceDesignTests
             expected.ToExpectedObject().ShouldMatch(actual);
         }
 
-        private IEnumerable<Employee> JoeyReverse(IEnumerable<Employee> employees)
+        private IEnumerable<TSource> JoeyReverse<TSource>(IEnumerable<TSource> employees)
         {
-            throw new System.NotImplementedException();
+            return new Stack<TSource>(employees);
+            
+            // var enumerator = employees.GetEnumerator();
+            //
+            // var s = new Stack<Employee>();
+            // while (enumerator.MoveNext())
+            // {
+            //     s.Push(enumerator.Current);
+            // }
+            //
+            // while (s.Count > 0)
+            // {
+            //     yield return (TSource)s.Pop();
+            // }
         }
     }
 }
