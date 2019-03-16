@@ -1,13 +1,25 @@
 ﻿using System;
+using System.Collections;
 using ExpectedObjects;
 using Lab.Entities;
 using NUnit.Framework;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 
 namespace CSharpAdvanceDesignTests
 {
+    public class CombineKeyComparer
+    {
+        public CombineKeyComparer(Func<Employee, string> keySelector, IComparer keyComparer)
+        {
+            KeySelector = keySelector;
+            KeyComparer = keyComparer;
+        }
+
+        public Func<Employee, string> KeySelector { get; private set; }
+        public IComparer KeyComparer { get; private set; }
+    }
+
     [TestFixture]
     public class JoeyOrderByTests
     {
@@ -47,11 +59,9 @@ namespace CSharpAdvanceDesignTests
                 new Employee { FirstName = "Joey", LastName = "Chen" }
             };
 
-            var actual = JoeyOrderByLastNameAndFirstName(employees,
-                                                         element => element.LastName,
-                                                         Comparer<string>.Default, 
-                                                         element => element.FirstName,
-                                                         Comparer<string>.Default);
+            var firstComparer = new CombineKeyComparer(element => element.LastName, Comparer<string>.Default);
+            var secondComparer = new CombineKeyComparer(element => element.FirstName, Comparer<string>.Default);
+            var actual = JoeyOrderByLastNameAndFirstName(employees, firstComparer, secondComparer);
 
             var expected = new[]
             {
@@ -65,13 +75,11 @@ namespace CSharpAdvanceDesignTests
         }
 
         private IEnumerable<Employee> JoeyOrderByLastNameAndFirstName(IEnumerable<Employee> employees,
-                                                                      Func<Employee, string> keySelector,
-                                                                      Comparer<string> firstKeyComparer,
-                                                                      Func<Employee, string> secondKeySelector,
-                                                                      Comparer<string> secondKeyComparer)
+                                                                      CombineKeyComparer firstComparer,
+                                                                      CombineKeyComparer secondComparer)
         {
             //bubble sort
-
+            
             var elements = employees.ToList();
             while (elements.Any())
             {
@@ -80,7 +88,7 @@ namespace CSharpAdvanceDesignTests
                 for (int i = 1; i < elements.Count; i++)
                 {
                     var element = elements[i];
-                    var firstCompareResult = firstKeyComparer.Compare(keySelector(element), keySelector(minElement));
+                    var firstCompareResult = firstComparer.KeyComparer.Compare(firstComparer.KeySelector(element), firstComparer.KeySelector(minElement));
                     if (firstCompareResult < 0)
                     {
                         minElement = element;
@@ -88,7 +96,7 @@ namespace CSharpAdvanceDesignTests
                     }
                     else if (firstCompareResult == 0)
                     {
-                        if (secondKeyComparer.Compare(secondKeySelector(element), secondKeySelector(minElement)) < 0)
+                        if (secondComparer.KeyComparer.Compare(secondComparer.KeySelector(element), secondComparer.KeySelector(minElement)) < 0)
                         {
                             minElement = element;
                             index = i;
