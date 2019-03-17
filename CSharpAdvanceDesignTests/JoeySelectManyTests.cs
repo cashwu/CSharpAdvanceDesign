@@ -1,11 +1,11 @@
-﻿using ExpectedObjects;
+﻿using System;
+using ExpectedObjects;
 using NUnit.Framework;
 using System.Collections.Generic;
 
 namespace CSharpAdvanceDesignTests
 {
     [TestFixture]
-    [Ignore("not yet")]
     public class JoeySelectManyTests
     {
         [Test]
@@ -13,11 +13,13 @@ namespace CSharpAdvanceDesignTests
         {
             var cities = new List<City>
             {
-                new City {Name = "台北市", Sections = new List<string> {"大同", "大安", "松山"}},
-                new City {Name = "新北市", Sections = new List<string> {"三重", "新莊"}},
+                new City { Name = "台北市", Sections = new List<string> { "大同", "大安", "松山" } },
+                new City { Name = "新北市", Sections = new List<string> { "三重", "新莊" } },
             };
 
-            var actual = JoeySelectMany(cities);
+            var actual = JoeySelectMany(cities,
+                                        cityCurrent => cityCurrent.Sections,
+                                        (city, section) => $"{city.Name}-{section}");
 
             var expected = new[]
             {
@@ -31,9 +33,22 @@ namespace CSharpAdvanceDesignTests
             expected.ToExpectedObject().ShouldMatch(actual);
         }
 
-        private IEnumerable<string> JoeySelectMany(IEnumerable<City> cities)
+        private IEnumerable<string> JoeySelectMany(IEnumerable<City> sources,
+                                                   Func<City, List<string>> collectionSelector,
+                                                   Func<City, string, string> resultSelector)
         {
-            throw new System.NotImplementedException();
+            var enumerator = sources.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                var cityCurrent = enumerator.Current;
+                var sectionEnumerator = collectionSelector(cityCurrent).GetEnumerator();
+
+                while (sectionEnumerator.MoveNext())
+                {
+                    var sectionCurrent = sectionEnumerator.Current;
+                    yield return resultSelector(cityCurrent, sectionCurrent);
+                }
+            }
         }
     }
 
