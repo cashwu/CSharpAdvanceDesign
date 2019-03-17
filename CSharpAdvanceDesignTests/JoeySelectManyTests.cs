@@ -33,9 +33,9 @@ namespace CSharpAdvanceDesignTests
             expected.ToExpectedObject().ShouldMatch(actual);
         }
 
-        private IEnumerable<string> JoeySelectMany(IEnumerable<City> sources,
-                                                   Func<City, List<string>> collectionSelector,
-                                                   Func<City, string, string> resultSelector)
+        private IEnumerable<TResult> JoeySelectMany<TSource, TCollection, TResult>(IEnumerable<TSource> sources,
+                                                   Func<TSource, IEnumerable<TCollection>> collectionSelector,
+                                                   Func<TSource, TCollection, TResult> resultSelector)
         {
             var enumerator = sources.GetEnumerator();
             while (enumerator.MoveNext())
