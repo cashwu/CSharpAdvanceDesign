@@ -24,7 +24,13 @@ namespace CSharpAdvanceDesignTests
 
             var validators = JoeyOfType<IValidator<Product>>(arguments.Values);
 
-            Assert.AreEqual(2, validators.Count());
+            var product = JoeyOfType<Product>(arguments.Values).Single();
+
+            var isValid = validators.All(a => a.Validate(product));
+
+            // Assert.AreEqual(2, validators.Count());
+            
+            Assert.IsFalse(isValid);
         }
 
         private IEnumerable<TResult> JoeyOfType<TResult>(IEnumerable source)
