@@ -30,7 +30,7 @@ namespace Lab
             // }
         }
 
-        public static IEnumerable<TSource> JoeyWhere<TSource>(this List<TSource> sources, Func<TSource, int, bool> predicate)
+        public static IEnumerable<TSource> JoeyWhere<TSource>(this IEnumerable<TSource> sources, Func<TSource, int, bool> predicate)
         {
             var index = 0;
             foreach (var source in sources)
