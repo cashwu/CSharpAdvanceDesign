@@ -5,7 +5,7 @@ using Lab.Entities;
 
 namespace Lab
 {
-    internal class MyLookup : IEnumerable<IGrouping<string, Employee>>
+    public class MyLookup : IEnumerable<IGrouping<string, Employee>>
     {
         private readonly Dictionary<string, List<Employee>> _myLookup = new Dictionary<string, List<Employee>>();
 
